@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAAC POWER UP - SORTEO LIFTING (App)</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --accent:#00cc44;
+  --gold:#ffd700;
+  --bg:#0a0a0a;
+  --muted:#ccc;
+  --text:#fff;
+}
+
+body{
+  margin:0;
+  font-family:"Poppins", sans-serif;
+  background:#000;
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #222;
+}
+header h1{
+  display:inline-block;
+  font-size:32px;
+  margin:0;
+  padding:10px 18px;
+  font-weight:900;
+  color:var(--gold);
+  letter-spacing:1px;
+  border:2px solid var(--gold);
+  border-radius:14px;
+  text-shadow:0 0 10px rgba(255,215,0,0.6);
+  box-shadow:0 0 12px rgba(255,215,0,0.25);
+}
+
+/* PANEL */
+.panel{
+  background:rgba(20,20,20,0.65);
+  border:1px solid rgba(255,215,0,0.18);
+  padding:25px;
+  border-radius:20px;
+  width:92%;
+  margin:20px auto 10px;
+}
+
+.subtitulo{
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:18px;
+  font-weight:600;
+  font-size:15px;
+}
+
+/* BLOQUES */
+.flex-top{
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  gap:25px;
+  flex-wrap:wrap;
+}
+
+.box{
+  background:#111;
+  border:2px solid rgba(255,215,0,0.45);
+  padding:18px 22px;
+  border-radius:14px;
+  width:260px;
+  min-height:220px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  color:#fff;
+  text-align:center;
+}
+
+.combos{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.combo{
+  background:#151515;
+  border:1px solid rgba(255,215,0,0.35);
+  padding:8px;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:600;
+  color:#eee;
+}
+
+.cuenta-box{
+  font-size:15px;
+  line-height:20px;
+}
+.cuenta-box b{
+  color:var(--gold);
+  font-size:16px;
+}
+
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-top:20px;
+}
+.form input{
+  background:#0b0b0b;
+  border:2px solid transparent;
+  padding:14px;
+  border-radius:12px;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  outline:none;
+  background-image:linear-gradient(#0b0b0b, #0b0b0b),
+                    linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
+  background-origin:border-box;
+  background-clip:padding-box, border-box;
+}
+
+/* BOTÓN */
+.cta{ margin-top:18px; text-align:center; }
+
+.btn.primary{
+  background:#111;
+  color:#ffd700;
+  border:2px solid #d4af37;
+  padding:14px;
+  font-size:17px;
+  border-radius:14px;
+  font-weight:700;
+  width:100%;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 0 10px rgba(255,215,0,0.35);
+  animation: pulseGlow 2.2s infinite ease-in-out;
+}
+
+.btn.primary:hover{
+  transform:scale(1.06);
+  box-shadow:0 0 18px rgba(255,215,0,0.7);
+  background:#222;
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow:0 0 10px rgba(255,215,0,0.25); }
+  50% { box-shadow:0 0 22px rgba(255,215,0,0.55); }
+  100% { box-shadow:0 0 10px rgba(255,215,0,0.25); }
+}
+
+/* ANIMACIÓN SHAKE */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+/* NÚMEROS */
+.numeros-section{
+  width:92%;
+  margin:10px auto 40px;
+}
+
+#contadorSeleccion{
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  color:var(--gold);
+  margin-bottom:12px;
+  text-shadow:0 0 8px rgba(255,215,0,0.4);
+}
+
+#tabla{
+  display:grid;
+  grid-template-columns:repeat(10, 1fr);
+  gap:4px;
+  margin-top:10px;
+}
+
+#tabla div{
+  background:#111;
+  border:1px solid #333;
+  padding:10px 0;
+  text-align:center;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  color:#fff;
+  transition:0.15s;
+}
+
+#tabla div:hover{
+  border-color:var(--accent);
+}
+
+/* VERDE SELECCIONADO */
+.selected{
+  background:#00cc44 !important;
+  border-color:#009933 !important;
+  color:#fff;
+  font-weight:700;
+  transform:scale(1.15);
+}
+
+/* OCUPADOS */
+.ocupado{
+  background:#660000 !important;
+  border-color:#330000 !important;
+  opacity:0.55;
+  color:#fff !important;
+  cursor:not-allowed !important;
+}
+.ocupado:hover{
+  border-color:#330000 !important;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>BAAC POWER UP - SORTEO LIFTING</h1>
+</header>
+
+<div class="panel">
+
+  <div class="subtitulo">Combos para jugar a tu estilo por 0,50 ctvs</div>
+
+  <div class="flex-top">
+
+    <div class="box">
+      <div class="combos">
+        <div class="combo">🎟️ 2 boletos x $1</div>
+        <div class="combo">🎟️ 4 boletos x $2</div>
+        <div class="combo">🎟️ 6 boletos x $3</div>
+        <div class="combo">🎟️ 10 boletos x $5</div>
+      </div>
+    </div>
+
+    <div class="box cuenta-box">
+      <div><b>Cuenta de Ahorros:</b> 2200871074</div>
+      <div>Banco Pichincha · Titular:<br><b>Bryan Arturo Ayenla</b></div>
+    </div>
+
+  </div>
+
+  <div class="form">
+    <input type="text" id="nombre" placeholder="Nombre completo">
+    <input type="tel" id="telefono" placeholder="Teléfono">
+    <input type="email" id="correo" placeholder="Correo">
+  </div>
+
+  <div class="cta">
+    <button id="btnRegistrar" class="btn primary">REGISTRAR</button>
+
+    <div id="msgError" style="
+      display:none;
+      margin-top:10px;
+      color:#ff4444;
+      font-weight:700;
+      text-align:center;
+      font-size:15px;
+    "></div>
+  </div>
+
+</div>
+
+<div class="numeros-section">
+
+  <div id="contadorSeleccion">Seleccionados: 0</div>
+  <div id="tabla"></div>
+</div>
+
+<script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxbyYd8N06UI-2OW8ZId3q6ZF2JZGhr4qlf9rLU2CNODqL6o06Il8EQJezpP84EeAVdyQ/exec"; // Reemplaza con tu URL real
+
+const tabla = document.getElementById("tabla");
+const contador = document.getElementById("contadorSeleccion");
+let seleccionados = [];
+let ocupadosGlobal = [];
+
+async function cargarOcupados(){
+  try{
+    const res = await fetch(WEBAPP_URL + "?action=getOcupados");
+    const data = await res.json();
+    ocupadosGlobal = data.ocupados || [];
+    return ocupadosGlobal;
+  } catch(e){
+    console.error("Error cargando ocupados", e);
+    return [];
+  }
+}
+
+async function generarTabla(){
+  tabla.innerHTML = "";
+  seleccionados = [];
+  actualizarContador();
+  const ocupados = await cargarOcupados();
+
+  for(let i=1; i<=500; i++){
+    const celda = document.createElement("div");
+    celda.textContent = i;
+
+    if(ocupados.includes(i)){
+      celda.classList.add("ocupado");
+    } else {
+      celda.addEventListener("click", ()=>{
+        if(celda.classList.contains("selected")){
+          celda.classList.remove("selected");
+          seleccionados = seleccionados.filter(n => n !== i);
+        } else {
+          celda.classList.add("selected");
+          seleccionados.push(i);
+        }
+        actualizarContador();
+      });
+    }
+
+    tabla.appendChild(celda);
+  }
+}
+
+function actualizarContador(){
+  contador.textContent = `Seleccionados: ${seleccionados.length}`;
+}
+
+document.getElementById("btnRegistrar").addEventListener("click", async ()=>{
+  const nombre = document.getElementById("nombre").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+  const correo = document.getElementById("correo").value.trim();
+  const msg = document.getElementById("msgError");
+  const btn = document.getElementById("btnRegistrar");
+
+  if(seleccionados.length < 2){
+    msg.textContent = "⚠ Debes seleccionar al menos 2 números.";
+    msg.style.display = "block";
+    btn.style.animation="shake 0.4s";
+    setTimeout(()=>btn.style.animation="none",400);
+    return;
+  } else { msg.style.display="none"; }
+
+  if(!nombre || !telefono || !correo){
+    alert("Completa todos los datos.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  formData.append("telefono", telefono);
+  formData.append("correo", correo);
+  formData.append("boletos", seleccionados.join(","));
+
+  btn.textContent="Registrando...";
+  btn.disabled=true;
+
+  try{
+    const res = await fetch(WEBAPP_URL, {method:"POST", body:formData});
+    const data = await res.json();
+
+    if(data.status==="ok"){
+      alert("🎉 Registro guardado correctamente!");
+      document.getElementById("nombre").value="";
+      document.getElementById("telefono").value="";
+      document.getElementById("correo").value="";
+      await generarTabla();
+    } else {
+      alert("Hubo un problema: "+data.message);
+    }
+  } catch(err){
+    alert("Error al conectar con el servidor.");
+    console.error(err);
+  }
+
+  btn.textContent="REGISTRAR";
+  btn.disabled=false;
+});
+
+generarTabla();
+</script>
+
+</body>
+</html>
