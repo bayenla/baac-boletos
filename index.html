@@ -56,9 +56,17 @@ header h1{
 .subtitulo{
   color:var(--gold);
   text-align:center;
-  margin-bottom:18px;
+  margin-bottom:8px;
   font-weight:600;
   font-size:15px;
+}
+
+/* DESCRIPCIÓN */
+.descripcion{
+  text-align:center;
+  color:#ddd;
+  font-size:14px;
+  margin-bottom:14px;
 }
 
 /* BLOQUES */
@@ -98,8 +106,13 @@ header h1{
   font-size:15px;
   font-weight:600;
   color:#eee;
+  cursor:pointer;
+  transition:0.18s;
 }
+.combo:hover{ transform:scale(1.03); }
+.combo.active{ background:#0b3; border-color:#079930; color:#002a00; }
 
+/* cuenta */
 .cuenta-box{
   font-size:15px;
   line-height:20px;
@@ -109,11 +122,12 @@ header h1{
   font-size:16px;
 }
 
+/* form */
 .form{
   display:flex;
   flex-direction:column;
   gap:14px;
-  margin-top:20px;
+  margin-top:14px;
 }
 .form input{
   background:#0b0b0b;
@@ -130,7 +144,7 @@ header h1{
   background-clip:padding-box, border-box;
 }
 
-/* BOTÓN */
+/* CTA */
 .cta{ margin-top:18px; text-align:center; }
 
 .btn.primary{
@@ -145,28 +159,12 @@ header h1{
   cursor:pointer;
   transition:0.3s;
   box-shadow:0 0 10px rgba(255,215,0,0.35);
-  animation: pulseGlow 2.2s infinite ease-in-out;
 }
 
 .btn.primary:hover{
   transform:scale(1.06);
   box-shadow:0 0 18px rgba(255,215,0,0.7);
   background:#222;
-}
-
-@keyframes pulseGlow {
-  0% { box-shadow:0 0 10px rgba(255,215,0,0.25); }
-  50% { box-shadow:0 0 22px rgba(255,215,0,0.55); }
-  100% { box-shadow:0 0 10px rgba(255,215,0,0.25); }
-}
-
-/* ANIMACIÓN SHAKE */
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
 }
 
 /* NÚMEROS */
@@ -177,11 +175,11 @@ header h1{
 
 #contadorSeleccion{
   text-align:center;
-  font-size:18px;
+  font-size:16px;
   font-weight:700;
   color:var(--gold);
-  margin-bottom:12px;
-  text-shadow:0 0 8px rgba(255,215,0,0.4);
+  margin-bottom:10px;
+  text-shadow:0 0 6px rgba(255,215,0,0.35);
 }
 
 #tabla{
@@ -189,44 +187,64 @@ header h1{
   grid-template-columns:repeat(10, 1fr);
   gap:4px;
   margin-top:10px;
+  max-height:520px;
+  overflow:auto;
+  padding:8px;
+  border-radius:10px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
 }
 
 #tabla div{
   background:#111;
   border:1px solid #333;
-  padding:10px 0;
+  padding:8px 0;
   text-align:center;
   border-radius:8px;
-  cursor:pointer;
+  cursor:default;
   font-weight:600;
   color:#fff;
-  transition:0.15s;
+  transition:0.12s;
+  font-size:13px;
 }
 
 #tabla div:hover{
+  transform:translateY(-2px);
   border-color:var(--accent);
 }
 
-/* VERDE SELECCIONADO */
-.selected{
-  background:#00cc44 !important;
-  border-color:#009933 !important;
+/* ESTADOS */
+.estado-disponible{
+  background:#111;
   color:#fff;
-  font-weight:700;
-  transform:scale(1.15);
+}
+.estado-ocupado{
+  background:#ff0000 !important;   /* 🔥 Fondo rojo fuerte sólido */
+  border:2px solid #aa0000;        /* Borde rojo oscuro */
+  color:#fff;                      /* Texto blanco para buen contraste */
+  font-weight:900;
+  text-decoration: line-through;   /* Tachado */
+  box-shadow:0 0 10px #ff0000aa;   /* Glow rojo */
+
+  animation:
+    parpadeoOcupado 1.4s infinite ease-in-out,
+    latidoOcupado 1.8s infinite ease-in-out;
+}
+.estado-asignado{
+  background:#00cc44;
+  border-color:#009933;
+  color:#001b00;
+  font-weight:800;
 }
 
-/* OCUPADOS */
-.ocupado{
-  background:#660000 !important;
-  border-color:#330000 !important;
-  opacity:0.55;
-  color:#fff !important;
-  cursor:not-allowed !important;
+/* ASIGNADOS */
+#listaAsignados{
+  margin-top:12px;
+  text-align:center;
+  color:var(--gold);
+  font-weight:700;
+  display:none;
 }
-.ocupado:hover{
-  border-color:#330000 !important;
-}
+#msgError{ display:none; margin-top:10px; color:#ff4444; font-weight:700; text-align:center; font-size:15px; }
 </style>
 </head>
 
@@ -240,14 +258,19 @@ header h1{
 
   <div class="subtitulo">Combos para jugar a tu estilo por 0,50 ctvs</div>
 
+  <div class="descripcion">
+    <div>La selección es automática: el sistema asigna los números de manera aleatoria <strong>al momento de registrar</strong>.</div>
+    <div style="font-size:13px;color:#bbb;margin-top:6px;">Puedes visualizar abajo qué números ya están asignados (marcados en rojo) y cuáles están disponibles.</div>
+  </div>
+
   <div class="flex-top">
 
     <div class="box">
       <div class="combos">
-        <div class="combo">🎟️ 2 boletos x $1</div>
-        <div class="combo">🎟️ 4 boletos x $2</div>
-        <div class="combo">🎟️ 6 boletos x $3</div>
-        <div class="combo">🎟️ 10 boletos x $5</div>
+        <div class="combo" data-cant="2">🎟️ 2 boletos x $1</div>
+        <div class="combo" data-cant="4">🎟️ 4 boletos x $2</div>
+        <div class="combo" data-cant="6">🎟️ 6 boletos x $3</div>
+        <div class="combo" data-cant="10">🎟️ 10 boletos x $5</div>
       </div>
     </div>
 
@@ -258,6 +281,8 @@ header h1{
 
   </div>
 
+  <div id="listaAsignados">🎟️ Boletos asignados: <span id="asignadosText"></span></div>
+
   <div class="form">
     <input type="text" id="nombre" placeholder="Nombre completo">
     <input type="tel" id="telefono" placeholder="Teléfono">
@@ -266,33 +291,44 @@ header h1{
 
   <div class="cta">
     <button id="btnRegistrar" class="btn primary">REGISTRAR</button>
-
-    <div id="msgError" style="
-      display:none;
-      margin-top:10px;
-      color:#ff4444;
-      font-weight:700;
-      text-align:center;
-      font-size:15px;
-    "></div>
+    <div id="msgError"></div>
   </div>
 
 </div>
 
 <div class="numeros-section">
 
-  <div id="contadorSeleccion">Seleccionados: 0</div>
+  <div id="contadorSeleccion">Disponibles: 0</div>
   <div id="tabla"></div>
 </div>
 
 <script>
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxbyYd8N06UI-2OW8ZId3q6ZF2JZGhr4qlf9rLU2CNODqL6o06Il8EQJezpP84EeAVdyQ/exec"; // Reemplaza con tu URL real
+/*
+  Comportamiento:
+  - Visualiza 1..1000 con estados: disponible / ocupado.
+  - Usuario selecciona combo (cantidad).
+  - Al presionar REGISTRAR:
+      1) Se valida formulario y combo.
+      2) Se recargan ocupados (última verificación).
+      3) Se generan aleatoriamente N números libres.
+      4) Se envían al WebApp (POST) junto a datos.
+      5) Si respuesta ok: se muestran los números asignados y se refresca la cuadrícula.
+*/
+
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxbyYd8N06UI-2OW8ZId3q6ZF2JZGhr4qlf9rLU2CNODqL6o06Il8EQJezpP84EeAVdyQ/exec"; // reemplaza si necesitas
 
 const tabla = document.getElementById("tabla");
 const contador = document.getElementById("contadorSeleccion");
-let seleccionados = [];
-let ocupadosGlobal = [];
+const listaAsignados = document.getElementById("listaAsignados");
+const asignadosText = document.getElementById("asignadosText");
+const msgError = document.getElementById("msgError");
+const btnRegistrar = document.getElementById("btnRegistrar");
 
+let ocupadosGlobal = [];
+let cantidadElegida = 0;
+let asignadosTemp = [];
+
+// obtener ocupados del servidor
 async function cargarOcupados(){
   try{
     const res = await fetch(WEBAPP_URL + "?action=getOcupados");
@@ -301,95 +337,149 @@ async function cargarOcupados(){
     return ocupadosGlobal;
   } catch(e){
     console.error("Error cargando ocupados", e);
-    return [];
+    ocupadosGlobal = [];
+    return ocupadosGlobal;
   }
 }
 
+// pintar la tabla 1..1000
 async function generarTabla(){
   tabla.innerHTML = "";
-  seleccionados = [];
-  actualizarContador();
-  const ocupados = await cargarOcupados();
+  listaAsignados.style.display = "none";
+  asignadosText.textContent = "";
+  asignadosTemp = [];
 
-  for(let i=1; i<=500; i++){
+  const ocupados = await cargarOcupados();
+  const disponiblesCount = 1000 - (ocupados.length || 0);
+  contador.textContent = `Disponibles: ${disponiblesCount}`;
+
+  const fragment = document.createDocumentFragment();
+
+  for(let i=1;i<=1000;i++){
     const celda = document.createElement("div");
     celda.textContent = i;
-
     if(ocupados.includes(i)){
-      celda.classList.add("ocupado");
+      celda.classList.add("estado-ocupado");
+      celda.title = "Ocupado";
     } else {
-      celda.addEventListener("click", ()=>{
-        if(celda.classList.contains("selected")){
-          celda.classList.remove("selected");
-          seleccionados = seleccionados.filter(n => n !== i);
-        } else {
-          celda.classList.add("selected");
-          seleccionados.push(i);
-        }
-        actualizarContador();
-      });
+      celda.classList.add("estado-disponible");
+      celda.title = "Disponible";
     }
-
-    tabla.appendChild(celda);
+    fragment.appendChild(celda);
   }
+
+  tabla.appendChild(fragment);
 }
 
-function actualizarContador(){
-  contador.textContent = `Seleccionados: ${seleccionados.length}`;
+// manejador combos
+document.querySelectorAll(".combo").forEach(c=>{
+  c.addEventListener("click", ()=>{
+    document.querySelectorAll(".combo").forEach(x=>x.classList.remove("active"));
+    c.classList.add("active");
+    cantidadElegida = parseInt(c.dataset.cant, 10);
+    msgError.style.display = "none";
+    listaAsignados.style.display = "none";
+    asignadosText.textContent = "";
+  });
+});
+
+// shuffle parcial / generación
+function generarAleatorios(cant, ocupados){
+  const libres = [];
+  for(let i=1;i<=1000;i++){
+    if(!ocupados.includes(i)) libres.push(i);
+  }
+  if(libres.length < cant) return null;
+
+  // Fisher-Yates shuffle
+  for (let i = libres.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [libres[i], libres[j]] = [libres[j], libres[i]];
+  }
+
+  return libres.slice(0, cant);
 }
 
-document.getElementById("btnRegistrar").addEventListener("click", async ()=>{
+// registrar: generar aleatorios y enviar al servidor (solo al registrar)
+btnRegistrar.addEventListener("click", async ()=>{
+
   const nombre = document.getElementById("nombre").value.trim();
   const telefono = document.getElementById("telefono").value.trim();
   const correo = document.getElementById("correo").value.trim();
-  const msg = document.getElementById("msgError");
-  const btn = document.getElementById("btnRegistrar");
 
-  if(seleccionados.length < 2){
-    msg.textContent = "⚠ Debes seleccionar al menos 2 números.";
-    msg.style.display = "block";
-    btn.style.animation="shake 0.4s";
-    setTimeout(()=>btn.style.animation="none",400);
+  if(!cantidadElegida || cantidadElegida <= 0){
+    msgError.textContent = "⚠ Selecciona un combo primero.";
+    msgError.style.display = "block";
     return;
-  } else { msg.style.display="none"; }
-
+  }
   if(!nombre || !telefono || !correo){
-    alert("Completa todos los datos.");
+    msgError.textContent = "⚠ Completa todos los datos.";
+    msgError.style.display = "block";
     return;
   }
 
-  const formData = new FormData();
-  formData.append("nombre", nombre);
-  formData.append("telefono", telefono);
-  formData.append("correo", correo);
-  formData.append("boletos", seleccionados.join(","));
+  msgError.style.display = "none";
 
-  btn.textContent="Registrando...";
-  btn.disabled=true;
+  // bloqueo UI
+  btnRegistrar.textContent = "Asignando y registrando...";
+  btnRegistrar.disabled = true;
 
+  // última verificación de ocupados
+  await cargarOcupados();
+
+  const numeros = generarAleatorios(cantidadElegida, ocupadosGlobal);
+  if(!numeros){
+    alert("Lo siento — ya no hay suficientes números libres. Actualiza la página y prueba otro combo.");
+    btnRegistrar.textContent = "REGISTRAR";
+    btnRegistrar.disabled = false;
+    await generarTabla();
+    return;
+  }
+
+  // enviar al servidor
   try{
-    const res = await fetch(WEBAPP_URL, {method:"POST", body:formData});
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("telefono", telefono);
+    formData.append("correo", correo);
+    formData.append("boletos", numeros.join(","));
+
+    const res = await fetch(WEBAPP_URL, { method: "POST", body: formData });
     const data = await res.json();
 
-    if(data.status==="ok"){
-      alert("🎉 Registro guardado correctamente!");
-      document.getElementById("nombre").value="";
-      document.getElementById("telefono").value="";
-      document.getElementById("correo").value="";
+    if(data && data.status === "ok"){
+      // mostrar asignados
+      asignadosTemp = numeros.slice();
+      asignadosText.textContent = asignadosTemp.join(" · ");
+      listaAsignados.style.display = "block";
+
+      alert("🎉 Registro guardado correctamente!\nTus números: " + asignadosTemp.join(", "));
+
+      // limpiar formulario y combo
+      document.getElementById("nombre").value = "";
+      document.getElementById("telefono").value = "";
+      document.getElementById("correo").value = "";
+      cantidadElegida = 0;
+      document.querySelectorAll(".combo").forEach(x=>x.classList.remove("active"));
+
+      // refrescar tabla para mostrar los ocupados actualizados
       await generarTabla();
     } else {
-      alert("Hubo un problema: "+data.message);
+      const ms = data && data.message ? data.message : "Respuesta inesperada del servidor.";
+      alert("Error guardando: " + ms);
     }
   } catch(err){
-    alert("Error al conectar con el servidor.");
     console.error(err);
+    alert("Error de conexión al intentar registrar. Intenta de nuevo.");
   }
 
-  btn.textContent="REGISTRAR";
-  btn.disabled=false;
+  btnRegistrar.textContent = "REGISTRAR";
+  btnRegistrar.disabled = false;
 });
 
+// inicio
 generarTabla();
+
 </script>
 
 </body>
