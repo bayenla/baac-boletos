@@ -291,6 +291,39 @@ header h1{
 
   <div class="cta">
     <button id="btnRegistrar" class="btn primary">REGISTRAR</button>
+
+<div style="text-align:center; margin-top:25px;">
+  <a href="https://www.tiktok.com/@arturbaac" target="_blank"
+     style="
+        display:inline-block;
+        background:linear-gradient(90deg, #d4af37, #ffd700);
+        padding:12px 24px;
+        border-radius:14px;
+        color:#000;
+        font-weight:700;
+        font-size:16px;
+        text-decoration:none;
+        font-family:'Poppins', sans-serif;
+        box-shadow:0 0 12px #d4af37;
+        transition:all 0.3s ease;
+        animation:pulse 2s infinite;
+     "
+     onmouseover="this.style.transform='scale(1.08)'; this.style.boxShadow='0 0 18px #ffea80';"
+     onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 12px #d4af37';"
+  >
+    🎵 Sígueme en TikTok: <strong>@arturbaac</strong>
+  </a>
+</div>
+
+<style>
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+</style>
+
+
     <div id="msgError"></div>
   </div>
 
@@ -481,6 +514,5 @@ btnRegistrar.addEventListener("click", async ()=>{
 generarTabla();
 
 </script>
-
 </body>
 </html>
